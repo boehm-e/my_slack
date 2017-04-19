@@ -1,36 +1,25 @@
 /*
-** my_strdup.c for  in /home/boehm_e/libmy_03/libmy_03
+** my_strdup.c for  in /home/boehm_s/DEV_C/Jour07/my_strdup
 ** 
-** Made by BOEHM ERWAN
-** Login   <boehm_e@etna-alternance.net>
+** Made by BOEHM Steven
+** Login   <boehm_s@etna-alternance.net>
 ** 
-** Started on  Wed Oct  8 09:24:31 2014 BOEHM ERWAN
-** Last update Wed Oct  8 09:26:26 2014 BOEHM ERWAN
+** Started on  Mon Oct  6 10:53:03 2014 BOEHM Steven
+** Last update Sat Nov 12 04:04:47 2016 BOEHM Steven
 */
-#include "../headers/struct.h"
 
-char    *my_strcpy(char *dest, char *src)
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+
+char	*my_strcpy(char *dest, char *src);
+int     my_strlen(char *str);
+
+char	*my_strdup(char *str)
 {
-  int   i;
+  char	*str2;
 
-  i = 0;
-
-  while (src[i] != '\0')
-    {
-      dest[i] = src[i];
-      i++;
-    }
-  dest[i] = '\0';
-  return (dest);
-}
-
-char    *my_strdup(char *str)
-{
-  char  *copy;
-  int   i;
-
-  for (i = 0; str[i] != '\0'; i++);
-  copy = malloc(i * sizeof(char));
-  my_strcpy(copy, str);
-  return (copy);
+  str2 = malloc(my_strlen(str) * sizeof(*str));
+  str2 = my_strcpy(str2, str);
+  return (str2);
 }

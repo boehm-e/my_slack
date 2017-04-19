@@ -1,50 +1,38 @@
-##
-##
-## Made by BOEHM erwan
-## Login   <boehm_e@etna-alternance.net>
-##
-##
+NAME	=	my_slack
 
-CC =		gcc
+SRC	=	main.c
 
-CFLAGS +=	-Wall -Wextra -W -g -g03 -pedantic
-NAME	=		slack
+OBJ	=	$(SRC:%.c=%.o)
 
-SRC	=	main.c \
-			libmy/my_putchar.c    	\
-			libmy/my_isneg.c      	\
-			libmy/my_put_nbr.c    	\
-			libmy/my_swap.c       	\
-			libmy/my_putstr.c     	\
-			libmy/my_strlen.c     	\
-			libmy/my_getnbr.c     	\
-			libmy/my_aff_tab.c    	\
-			libmy/my_strcpy.c     	\
-			libmy/my_strncpy.c    	\
-			libmy/my_strcmp.c     	\
-			libmy/my_strncmp.c    	\
-			libmy/my_strcat.c     	\
-			libmy/my_strncat.c    	\
-			libmy/my_strstr.c
+RM	=	rm -Rf
 
+GCFLAGS =	gcc -g -W -Wall -Werror -ansi -pedantic
 
+LDFLAGS	=	-L./libmy -lmy -static
 
-OBJ	=	$(SRC:%.c=%.o)  $(SRCS:.c=.o)
+all	:	$(NAME)
 
-RM	=	rm -f
+$(NAME)	:	lib	\
+		$(OBJ)
+		$(CC) -o $(NAME) $(CFLAGS) $(OBJ) $(LDFLAGS)
 
-$(NAME):	$(OBJ)
-		$(CC) -o $(NAME) $(OBJ) $(LDFLAGS)
+clean	:
+		$(RM) $(OBJ)
+		$(RM) *~
+		$(RM) #*#
 
-all:		$(NAME)
-
-clean:
-		$(RM) $(OBJ) $(NAME)
-
-fclean:		clean
+fclean	:	clean
 		$(RM) $(NAME)
 
-run:		$(NAME)
-				./${NAME}
+%.o	:	%.c
+		$(GCFLAGS) -c $< -o $@
 
-re:		fclean all
+re	:	fclean all
+
+lib	:
+		cd libmy;make re;make clean;cd -;
+
+run	:
+		./my_FTL
+
+.PHONY	:	all clean fclean re

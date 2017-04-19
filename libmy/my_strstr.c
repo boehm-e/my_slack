@@ -1,34 +1,30 @@
 /*
-** my_strstr.c for  in /home/boehm_e/libr
+** my_strstr.c for  in /home/boehm_s/DEV_C/Libmy/boehm_s/libmy_01
 ** 
-** Made by BOEHM ERWAN
-** Login   <boehm_e@etna-alternance.net>
+** Made by BOEHM Steven
+** Login   <boehm_s@etna-alternance.net>
 ** 
-** Started on  Sat Oct  4 18:43:17 2014 BOEHM ERWAN
-** Last update Mon Oct  6 10:25:09 2014 BOEHM ERWAN
+** Started on  Fri Oct  3 18:54:30 2014 BOEHM Steven
+** Last update Sat Nov 12 04:07:35 2016 BOEHM Steven
 */
-#include "../headers/struct.h"
 
-char *my_strstr(char *str, char *to_find)
+char	*my_strstr(char *str, char *to_find)
 {
-  int i;
-  int i2;
-  int num;
+  int	i;
 
-  i2 = 0;
-  for (num = 0; to_find[num] != '\0'; num++)
-    for (i = 0; str[i] != '\0'; i++)
-      {
-	i2 = 0;
-	while (i2 < num && str[(i + i2)] == to_find[i2] && str[(i + i2)] != '\0')
-	  {
-	    i2++;
-	  }
-	if (i2 == num)
-	  {
-	    return (&str[i]);
-	  }
-      }
-  str = "null";
-  return (str);
+  if (str[0] == '\0')
+    return ("null");
+  if (str[0] != '\0')
+    {
+      i = 0;
+      while (to_find[i] != '\0')
+	{
+	  if (to_find[i] != str[i])
+	    return (my_strstr(str + 1, to_find));
+	  i++;
+	}
+      return (str);
+    }
+  else
+    return ("null");
 }

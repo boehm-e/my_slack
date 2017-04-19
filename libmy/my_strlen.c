@@ -1,23 +1,24 @@
 /*
-** my_strlen.c for   in /home/boehm_e/Jour03C/my_strlen
+** my_putstr.c for  in /home/boehm_s/DEV_C/Libmy/boehm_s/libmy_01
 ** 
-** Made by BOEHM ERWAN
-** Login   <boehm_e@etna-alternance.net>
+** Made by BOEHM Steven
+** Login   <boehm_s@etna-alternance.net>
 ** 
-** Started on  Wed Oct  1 09:28:52 2014 BOEHM ERWAN
-** Last update Sat Oct  4 19:54:42 2014 BOEHM ERWAN
+** Started on  Fri Oct  3 18:11:36 2014 BOEHM Steven
+** Last update Sat Nov 12 04:05:41 2016 BOEHM Steven
 */
-#include "../headers/struct.h"
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
 
 int	my_strlen(char *str)
 {
   int	i;
 
   i = 0;
-
   while (str[i] != '\0')
-    {
-      ++i;
-    }
-  return i;
+    i++;
+
+  return (i);
 }

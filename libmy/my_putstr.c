@@ -1,21 +1,29 @@
 /*
-** my_putstr.c for  in /home/boehm_e/Jour02C/my_putstr
-**
-** Made by BOEHM ERWAN
-** Login   <boehm_e@etna-alternance.net>
-**
-** Started on  Tue Sep 30 11:00:08 2014 BOEHM ERWAN
-** Last update Sat Oct  4 17:33:15 2014 BOEHM ERWAN
+** my_putstr.c for  in /home/boehm_s/DEV_C/Libmy/boehm_s/libmy_01
+** 
+** Made by BOEHM Steven
+** Login   <boehm_s@etna-alternance.net>
+** 
+** Started on  Fri Oct  3 18:15:20 2014 BOEHM Steven
+** Last update Sat Nov 12 04:03:42 2016 BOEHM Steven
 */
-#include "../headers/struct.h"
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+
+void	my_putchar(char c);
+
 void	my_putstr(char *str)
 {
   int	i;
 
   i = 0;
-  while (str[i] != '\0')
+  if (!(str == NULL))
     {
-      my_putchar(str[i]);
-      ++i;
+      while (str[i] != '\0')
+	{
+	  my_putchar(str[i++]);
+	}
     }
 }

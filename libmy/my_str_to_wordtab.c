@@ -1,93 +1,93 @@
 /*
-** my_str_to_wordtab.c for  in /home/boehm_e/Jour08C/my_params_to_tab
-**
-** Made by BOEHM ERWAN
-** Login   <boehm_e@etna-alternance.net>
-**
-** Started on  Tue Oct  7 10:25:48 2014 BOEHM ERWAN
-** Last update Wed Oct  8 09:24:20 2014 BOEHM ERWAN
+** my_str_to_wordtab.c for  in /home/boehm_s/DEV_C/Jour07/boehm_s/my_str_to_wordtab
+** 
+** Made by BOEHM Steven
+** Login   <boehm_s@etna-alternance.net>
+** 
+** Started on  Mon Oct  6 11:29:29 2014 BOEHM Steven
+** Last update Sat Nov 12 04:09:11 2016 BOEHM Steven
 */
-#include "../headers/struct.h"
 
-char    **my_str_to_wordtab(char *str)
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+
+void	my_putchar(char c);
+void	my_putstr(char *str);
+
+int	is_alphanum(char c)
 {
-  int number;
-  int   i;
-  int   j;
-  char  **word;
-  char  *cpy;
+  int	r;
 
-  cpy = my_strdup(str);
-  j = 0;
-  number = word_counter(my_strdup(cpy));
-  word = malloc(sizeof(char*) * number);
-  for(i = 0; cpy[i] != '\0'; i++)
-    {
-      if ((cpy[i] >= 'a' && cpy[i] <= 'z') || (cpy[i] >= 'A' && cpy[i] <= 'Z')
-          || (cpy[i] >= '0' && cpy[i] <= '9'))
-        {
-          stop(&cpy[i]);
-          word[j] = malloc(sizeof(char) * char_counter(&cpy[i]));
-          word[j] = &cpy[i];
-          j++;
-          for (i = i;((cpy[i] >= '0' && cpy[i] <= '9') || (cpy[i] >= 'A' && cpy\
-							   [i] <= 'Z')
-                      || (cpy[i] >= 'a' && cpy[i] <= 'z')) && cpy[i] != '\0'; i\
-		 ++);
-        }
-    }
-  return (word);
+  if (c >= 'A' && c <= 'Z')
+    r = 1;
+  else if (c >= 'a' && c <= 'z')
+    r = 1;
+  else if (c >= '0' && c <= '9')
+    r = 1;
+  else if (c == '\n' || c == '\t')
+    r = 1;
+  else
+    r = 0;
+  return (r);
 }
 
-int     char_counter(char *str)
+int	count_word(char *str)
 {
-  int   i;
+  int	i;
+  int	count;
 
-  for (i = 0; str[i] != '\0'; i++);
-  i++;
-  return i;
-}
-
-int     word_counter(char *str)
-{
-  int   i;
-  int   count;
-
+  i = 0;
   count = 0;
-  for (i = 0; str[i] = '\0'; i++)
+  while (str[i])
     {
-      if ((str[i] >= 'a' && str[i] <= 'z')
-          || (str[i] >= 'A' && str[i] <= 'Z')
-          || (str[i] >= '0' && str[i] <= '9'))
-        {
-          count++;
-          while ((str[i] >= 'a' && str[i] <= 'z')
-                 || (str[i] >='A' && str[i] <= 'Z')
-                 || (str[i] >='0' && str[i] <= '9'))
-            i++;
-        }
+      if (!(is_alphanum(str[i + 1] || str[i + 1] == '\0')))
+	count++;
+      i++;
     }
-  return count;
+  return (count);
 }
 
-void     stop(char *str)
+int	len_word(char *str, int p)
 {
-  int   s;
+  int	i;
+  int	count2;
 
-  for (s = 0;(str[s] >= 'a' && str[s] <= 'z')
-         || (str[s] >='A' && str[s] <= 'Z')
-         || (str[s] >='0' && str[s] <= '9'); s++);
-  str[s] = '\0';
+  i = p;
+  count2 = 0;
+  while (str[i] || is_alphanum(str[i]) == 1)
+    {
+      i++;
+      count2++;
+    }
+  return (count2);
 }
 
-
-char    *my_strdup(char *str)
+char	**my_str_to_wordtab(char *str)
 {
-  char  *copy;
-  int   i;
+  int	i;
+  int	j;
+  int	k;
+  char	**tab;
 
-  for (i = 0; str[i] != '\0'; i++);
-  copy = malloc(i * sizeof(char));
-  my_strcpy(copy, str);
-  return (copy);
+  i = 0;
+  j = 0;
+  tab = malloc(sizeof(char *) * count_word(str) + 1);
+  while (str[i])
+    {
+      while (str[i] && is_alphanum(str[i]) != 1)
+	i++;
+      tab[j] = malloc(sizeof(char) * (len_word(str, i)) + 1);
+      k = 0;
+      while (str[i] && is_alphanum(str[i]) != 0)
+	{
+	  tab[j][k] = str[i];
+	  i++;
+	  k++;
+	}
+      tab[j][k] = '\0';
+      j++;
+      i++;
+    }
+  return (tab);
 }

@@ -1,15 +1,22 @@
 /*
-** my_aff_tab.c for  in /home/boehm_e/Jour02C/my_aff_tab
-**
-** Made by BOEHM ERWAN
-** Login   <boehm_e@etna-alternance.net>
-**
-** Started on  Tue Sep 30 09:02:07 2014 BOEHM ERWAN
-** Last update Sat Oct  4 19:50:25 2014 BOEHM ERWAN
+** my_aff_tab.c for  in /home/boehm_s/DEV_C/Libmy/boehm_s/libmy_01
+** 
+** Made by BOEHM Steven
+** Login   <boehm_s@etna-alternance.net>
+** 
+** Started on  Fri Oct  3 18:20:19 2014 BOEHM Steven
+** Last update Sat Nov 12 03:59:51 2016 BOEHM Steven
 */
-#include "../headers/struct.h"
 
-void my_aff_tab(int tab[], int len)
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+
+void	my_putchar(char c);
+
+void    my_put_nbr(int n);
+
+void	my_aff_tab(int tab[], int len)
 {
   int	i;
 

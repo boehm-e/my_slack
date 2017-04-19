@@ -1,27 +1,28 @@
 /*
-** my_strncpy.c for  in /home/boehm_e/Jour04C/my_strncpy
+** my_strncpy.c for  in /home/boehm_s/DEV_C/Libmy/boehm_s/libmy_01
 ** 
-** Made by BOEHM ERWAN
-** Login   <boehm_e@etna-alternance.net>
+** Made by BOEHM Steven
+** Login   <boehm_s@etna-alternance.net>
 ** 
-** Started on  Thu Oct  2 09:35:08 2014 BOEHM ERWAN
-** Last update Sat Oct  4 19:55:44 2014 BOEHM ERWAN
+** Started on  Fri Oct  3 18:25:06 2014 BOEHM Steven
+** Last update Sat Nov 12 04:06:37 2016 BOEHM Steven
 */
-#include "../headers/struct.h"
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
 
 char	*my_strncpy(char *dest, char *src, int n)
 {
   int	i;
 
   i = 0;
-  
-  for (i = 0; ((src[i] != '\0') && (i < n)); i++)
+  while (src[i] != src[n])
     {
       dest[i] = src[i];
+      i = i + 1;
     }
-  for (i = 0; ((src[i] != '\0') && (i > n)); i++)
-    {
-      dest[i] = 0;
-    }
+  if (n > i)
+    dest[i] = '\0';
   return (dest);
 }

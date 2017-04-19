@@ -1,32 +1,35 @@
-/*
-** my_strncat.c for  in /home/boehm_e/libr
-** 
-** Made by BOEHM ERWAN
-** Login   <boehm_e@etna-alternance.net>
-** 
-** Started on  Sat Oct  4 18:03:36 2014 BOEHM ERWAN
-** Last update Sat Oct  4 19:55:12 2014 BOEHM ERWAN
+/*                                                                             
+** my_strncat.c for  in /home/boehm_s/DEV_C/Jour04/boehm_s                     
+**                                                                             
+** Made by BOEHM Steven                                                        
+** Login   <boehm_s@etna-alternance.net>                                       
+**                                                                             
+** Started on  Fri Oct  3 18:40:56 2014 BOEHM Steven                           
+** Last update Fri Oct  3 18:53:44 2014 BOEHM Steven
 */
-#include "../headers/struct.h"
 
-char *my_strncat(char *str1, char *str2, int n)
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+
+char    *my_strncat(char *str1, char *str2, int n)
 {
-  int	i;
-  int	j;
+  int   i;
+  int   a;
 
-  j = 0;
   i = 0;
+  a = 0;
 
   while (str1[i] != '\0')
     {
-      i++;
-    } 
+      i = i + 1;
+    }
 
-  while ((str2[j] != '\0') && (j < n))
+  while (str2[a] != str2[n])
     {
-      str1[i] = str2[j];
-      i++;
-      j++;
+      str1[i] = str2[a];
+      i = i + 1;
+      a = a + 1;
     }
   return (str1);
 }
