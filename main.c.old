@@ -1,17 +1,21 @@
 #include "./headers/libmy.h"
 #include "./headers/my_slack.h"
 
-int			main(/* int argc , char *argv[] */) {
+int			main(int argc, char const *argv[]) {
+  char			*msg;
   int			socket_desc;
   int			new_socket;
   int			c;
   struct sockaddr_in	server;
   struct sockaddr_in	client;
-  char			*msg;
+
+  UNUSED(argc);
+  UNUSED(argv);
+  UNUSED(server);
 
   /* Create socket */
   if ((socket_desc = socket(AF_INET , SOCK_STREAM , 0)) == -1)
-    printf("Could not create socket\n");
+    my_printf("Could not create socket\n");
 
   /* Prepare the sockaddr_in structure */
   server.sin_family = AF_INET;
@@ -19,21 +23,18 @@ int			main(/* int argc , char *argv[] */) {
   server.sin_port = htons( 8888 );
 
   /* Bind */
-  if( bind(socket_desc,(struct sockaddr *)&server , sizeof(server)) < 0) {
-    puts("bind failed");
-    return 1;
-  }
-  puts("bind done");
+  if( bind(socket_desc,(struct sockaddr *)&server , sizeof(server)) < 0)
+    my_printf("bind failed\n");
+  my_printf("bind done\n");
 
-  /* Listen */
   listen(socket_desc , 3);
 
   /* Accept and incoming connection */
-  puts("Waiting for incoming connections...");
+  my_printf("Waiting for incoming connections...\n");
   c = sizeof(struct sockaddr_in);
+  new_socket = accept(socket_desc, (struct sockaddr *)&client, (socklen_t*)&c);
   while( (new_socket = accept(socket_desc, (struct sockaddr *)&client, (socklen_t*)&c)) ) {
-    puts("Connection accepted");
-
+    my_printf("Connection accepted\n");
     /* Reply to the client */
     msg = "Hello Client , I have received your connection. But I have to go now, bye\n";
     write(new_socket , msg , strlen(msg));
@@ -43,6 +44,12 @@ int			main(/* int argc , char *argv[] */) {
     perror("accept failed");
     return 1;
   }
+
+  my_printf("Connection accepted\n");
+
+  /* Reply to the client */
+  msg = "Hello Client , I have received your connection. But I have to go now, bye\n";
+  write(new_socket , msg , strlen(msg));
 
   return 0;
 }

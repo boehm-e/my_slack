@@ -33,6 +33,6 @@ lib	:
 		cd libmy;make re;make clean;cd -;
 
 run	:
-		./my_FTL
+		./my_slack
 
 .PHONY	:	all clean fclean re
