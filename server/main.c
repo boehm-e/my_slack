@@ -2,15 +2,16 @@
 #include "./headers/list.h"
 #include "./headers/my_slack.h"
 
+int			connected;
 
 int			main(/* int argc , char *argv[] */) {
   int			socket_desc;
   int			new_socket;
   int			c;
   int			max_conn;
-  int			connected;
   struct sockaddr_in	addr_client;
   t_client		client;
+  t_client		_client;
   char			client_msg[BUFFER_SIZE];
   fd_set	        my_set;
 
@@ -31,7 +32,7 @@ int			main(/* int argc , char *argv[] */) {
     FD_SET(socket_desc, &my_set);
 
     if(connected)
-      FD_SET(socket_desc, &my_set);
+      FD_SET(client.sock, &my_set);
     if(select(max_conn + 1, &my_set, NULL, NULL, NULL) == -1) {
       my_printf("ERROR : Select failed");
       return 1;
@@ -39,7 +40,7 @@ int			main(/* int argc , char *argv[] */) {
 
 
     if (FD_ISSET(STDIN_FILENO, &my_set)) {
-      if(connected && send(new_socket, client_msg, my_strlen(client_msg), 0) < 0) {
+      if(connected && send(client.sock, client_msg, my_strlen(client_msg), 0) < 0) {
 	my_printf("ERROR : Send failed");
 	return -1;
       }
@@ -50,13 +51,26 @@ int			main(/* int argc , char *argv[] */) {
       if(recieve_msg(new_socket, client_msg) == -1)
         continue;
 
+      max_conn = new_socket > max_conn ? new_socket : max_conn;
       FD_SET(new_socket, &my_set);
+
+      _client.sock = new_socket;
+      my_strncpy(_client.name, client_msg, BUFFER_SIZE - 1);
+      client = _client;
+      connected = 1;
+
     } else {
       my_printf("3333333333333333333333333333333333333333333\n");
       if(connected != 0) {
-        if(FD_ISSET(socket_desc, &my_set)) {
-	  if(recieve_msg(new_socket, client_msg) == -1)
-	    continue;
+        if(FD_ISSET(client.sock, &my_set)) {
+          int c = recieve_msg(client.sock, client_msg);
+          if (c == 0) {
+            close(client.sock);
+            remove_client(&client);
+            my_printf("Client déconnecté");
+          } else {
+	     /* ?? */
+          }
         }
       }
     }
@@ -96,19 +110,21 @@ int			create_socket() {
 }
 
 int			recieve_msg(int _socket, char *msg) {
-  int n;
+  int			n;
 
   n = 0;
   if((n = recv(_socket, msg, BUFFER_SIZE - 1, 0)) < 0) {
     my_printf(" ERROR : recv()");
     n = 0;
   }
-  msg[n] = 0;
+
+  my_printf("RECIEVE MESSAGE : %s\n", msg);
 
   /* send back client's message */
   write(_socket , msg , my_strlen(msg));
   memset(msg, 0, my_strlen(msg));
 
+  msg[n] = 0;
   return n;
 }
 
@@ -117,4 +133,10 @@ int			send_msg(int _socket, char *msg) {
       my_printf(" ERROR : send()");
       exit(-1);
     }
+  return 0;
+}
+
+void			remove_client(t_client *client) {
+  memmove(&client, &client + 1, 0);
+  connected--;
 }

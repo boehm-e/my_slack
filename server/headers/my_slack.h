@@ -20,5 +20,7 @@ typedef struct	s_client {
 
 int	create_socket();
 int	recieve_msg(int _socket, char *msg);
+int	send_msg(int _socket, char *msg);
+void	remove_client(t_client *client);
 
 #endif                   /* !_MY_SLACK_ */
