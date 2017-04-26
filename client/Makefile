@@ -34,6 +34,6 @@ lib	:
 		cd libmy;make re;make clean;cd -;
 
 run	:
-		./my_slack
+		./my_slack_client
 
 .PHONY	:	all clean fclean re

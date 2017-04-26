@@ -10,6 +10,8 @@
 
 #define UNUSED(x) (void)(x)
 
+#define BUFFER_SIZE 1024
+
 typedef struct s_sockaddr_in {
     short            sin_family;
     unsigned short   sin_port;

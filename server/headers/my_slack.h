@@ -9,6 +9,6 @@
 #include <arpa/inet.h>
 
 #define UNUSED(x) (void)(x)
-
+#define BUFFER_SIZE 1024
 
 #endif                   /* !_MY_SLACK_ */

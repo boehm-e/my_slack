@@ -1,13 +1,6 @@
 #include "./headers/libmy.h"
 #include "./headers/my_slack.h"
 
-void clear_client_message(char *message) {
-  int i;
-  for (i = 0; i < my_strlen(message); i++) {
-    message[i] = '\0';
-  }
-  my_printf("REMOVED : %s\n", message);
-}
 
 int			main(/* int argc , char *argv[] */) {
   int			socket_desc;
@@ -18,11 +11,11 @@ int			main(/* int argc , char *argv[] */) {
   /*char			*msg;*/
 
   int read_size;
-  char client_message[2000];
+  char client_msg[BUFFER_SIZE];
 
-    /* Create socket */
+  /* Create socket */
   if ((socket_desc = socket(AF_INET , SOCK_STREAM , 0)) == -1)
-  printf("Could not create socket\n");
+    printf("Could not create socket\n");
 
   /* Prepare the sockaddr_in structure */
   server.sin_family = AF_INET;
@@ -45,14 +38,16 @@ int			main(/* int argc , char *argv[] */) {
     puts("Connection accepted");
 
     /* Reply to the client */
-    while( (read_size = recv(new_socket , client_message , 2000 , 0)) > 0 )
-    {
+    while( (read_size = recv(new_socket , client_msg , BUFFER_SIZE , 0)) > 0 ) {
       /* client message */
-      my_printf(client_message);
-      my_printf("\n===\n");
+      my_printf("MESSAGE RECIEVED : %s\n", client_msg);
+      my_printf("======================\n");
       /* send back client's message */
-      write(new_socket , client_message , strlen(client_message));
-      clear_client_message(client_message);
+      write(new_socket , client_msg , my_strlen(client_msg));
+
+      memset(client_msg, 0, my_strlen(client_msg));
+
+      /* clear_client_msg(client_msg); */
     }
 
   }

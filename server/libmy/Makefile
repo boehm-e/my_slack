@@ -1,11 +1,11 @@
 ##
 ## Makefile for  in /home/boehm_s/DEV_C/Libmy/boehm_s/libmy_01
-## 
+##
 ## Made by BOEHM Steven
 ## Login   <boehm_s@etna-alternance.net>
-## 
+##
 ## Started on  Sat Oct  4 18:59:41 2014 BOEHM Steven
-## Last update Wed Oct  8 09:40:27 2014 BOEHM Steven
+## Last update Wed Apr 26 13:51:53 2017 BOEHM Steven
 ##
 
 AR	= ar r
@@ -35,6 +35,7 @@ SRC	= 	my_putchar.c	\
 		classics2.c	\
 		my_printf.c	\
 		my_pow.c	\
+		liblist/list.c	\
 
 OBJ	= $(SRC:%.c=%.o)
 

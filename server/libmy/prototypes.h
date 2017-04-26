@@ -1,17 +1,18 @@
 /*
 ** prototypes.h for libmy in /home/boehm-s/Documents/ETNA/boehm_s/libmy
-** 
+**
 ** Made by BOEHM Steven
 ** Login   <boehm_s@etna-alternance.net>
-** 
+**
 ** Started on  Sat Nov 12 03:55:48 2016 BOEHM Steven
-** Last update Sat Nov 12 03:56:04 2016 BOEHM Steven
+** Last update Wed Apr 26 13:51:40 2017 BOEHM Steven
 */
 
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
+#include "./liblist/list.h"
 
 int	my_strlen(char *str);
 void	my_putchar(char c);
