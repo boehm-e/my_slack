@@ -1,4 +1,4 @@
-NAME	=	my_slack
+NAME	=	my_slack_server
 
 SRC	=	main.c
 
@@ -20,6 +20,7 @@ clean	:
 		$(RM) $(OBJ)
 		$(RM) *~
 		$(RM) #*#
+		$(RM) $(NAME)
 
 fclean	:	clean
 		$(RM) $(NAME)
