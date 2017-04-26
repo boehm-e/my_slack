@@ -1,11 +1,11 @@
 /*
 ** libmy.h for my_FTL in /home/boehm-s/Documents/ETNA/boehm_s
-** 
+**
 ** Made by BOEHM Steven
 ** Login   <boehm_s@etna-alternance.net>
-** 
+**
 ** Started on  Sat Nov 12 03:26:07 2016 BOEHM Steven
-** Last update Sat Nov 12 11:57:55 2016 BOEHM Steven
+** Last update Wed Apr 26 12:04:55 2017 BOEHM Steven
 */
 
 #ifndef _LIBMY_H_
@@ -31,5 +31,6 @@ char	*my_strstr(char *str, char *to_find);
 char	**my_str_to_wordtab(char *str);
 int	my_printf(char *str, ...);
 float	my_pow(float n, int pow);
+char	*readline(void);
 
 #endif /* !_LIBMY_H_ */

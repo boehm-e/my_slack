@@ -26,7 +26,4 @@ typedef struct s_sockaddr {
     char              sa_data[14];
 } t_sockaddr;
 
-
-char		*readline(void);
-
 #endif                   /* !_MY_SLACK_ */

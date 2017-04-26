@@ -1,7 +1,6 @@
 NAME	=	my_slack_client
 
 SRC	=	main.c \
-			readline.c
 
 OBJ	=	$(SRC:%.c=%.o)
 
