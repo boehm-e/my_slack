@@ -37,13 +37,15 @@ int	    main() {
   node_find = list_find_node_by_id(list, 1);
 
   node_find2 = malloc(sizeof(t_node));
-  node_find2 = list_find_node_by_data(list, (char *)"hey you");
+  node_find2 = list_find_node_by_data(list,
+				      (char *)"hey you");
 
   if (node_find != NULL)
     printf("%s\n", (char *)node_find->data);
 
   if (node_find2 != NULL)
-    printf("%i : %s\n", (int) node_find2->id, (char *) node_find2->data);
+    printf("%i : %s\n", (int) node_find2->id,
+	   (char *) node_find2->data);
 
   list_display_list(list);
 
