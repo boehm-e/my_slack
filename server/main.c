@@ -3,6 +3,7 @@
 #include "./headers/my_slack.h"
 
 int			connected;
+t_client		client;
 
 int			main(/* int argc , char *argv[] */) {
   int			socket_desc;
@@ -10,7 +11,6 @@ int			main(/* int argc , char *argv[] */) {
   int			c;
   int			max_conn;
   struct sockaddr_in	addr_client;
-  t_client		client;
   t_client		_client;
   char			client_msg[BUFFER_SIZE];
   fd_set	        my_set;
@@ -33,6 +33,7 @@ int			main(/* int argc , char *argv[] */) {
 
     if(connected)
       FD_SET(client.sock, &my_set);
+
     if(select(max_conn + 1, &my_set, NULL, NULL, NULL) == -1) {
       my_printf("ERROR : Select failed");
       return 1;
@@ -54,24 +55,44 @@ int			main(/* int argc , char *argv[] */) {
       max_conn = new_socket > max_conn ? new_socket : max_conn;
       FD_SET(new_socket, &my_set);
 
+      _client.sock = 0;
+      memset(_client.name, 0, my_strlen(_client.name));
+
       _client.sock = new_socket;
       my_strncpy(_client.name, client_msg, BUFFER_SIZE - 1);
       client = _client;
       connected = 1;
 
     } else {
-      my_printf("3333333333333333333333333333333333333333333\n");
-      if(connected != 0) {
-        if(FD_ISSET(client.sock, &my_set)) {
-          int c = recieve_msg(client.sock, client_msg);
-          if (c == 0) {
-            close(client.sock);
-            remove_client(&client);
-            my_printf("Client déconnecté");
-          } else {
-	     /* ?? */
-          }
-        }
+      if(FD_ISSET(client.sock, &my_set)) {
+	int c = recieve_msg(client.sock, client_msg);
+	if (c == 0) {
+	  close(client.sock);
+	  remove_client(&client);
+	  my_printf("Client déconnecté");
+	} else {
+	  if(connected && send(client.sock, client_msg, my_strlen(client_msg), 0) < 0) {
+	    my_printf("ERROR : Send failed");
+	    return -1;
+	  }
+
+	  /* loop over my_set, and catch calls */
+	  /* for(;;) { */
+	  /*   select(sock, &my_test, 0, 0, 0); */
+	  /*   if(FD_ISSET(socket_desc, &my_test)) { */
+	  /*     cli_len = sizeof(cli_addr); */
+	  /*     newfd = accept(socket_desc, (struct sockaddr*)&addr_client, (socklen_t *)&c); */
+	  /*     close(newfd); */
+	  /*   } */
+
+	  /*   for(i = 0; i < sock; ++i) { */
+	  /*     if (FD_ISSET(i, &my_test)) { */
+	  /* 	close(i); */
+	  /* 	FD_CLR(i, &my_test); */
+	  /*     } */
+	  /*   } */
+
+	}
       }
     }
 
@@ -80,6 +101,10 @@ int			main(/* int argc , char *argv[] */) {
       return 1;
     }
   }
+
+  close(client.sock);
+  close(socket_desc);
+
   return 0;
 }
 
