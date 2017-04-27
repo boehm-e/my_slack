@@ -1,0 +1,23 @@
+<RCC>
+    <qresource prefix="/">
+        <file>assets/back.svg</file>
+        <file>assets/background_header.png</file>
+        <file>assets/hamburger.png</file>
+        <file>assets/lyrics.png</file>
+        <file>assets/lyrics.svg</file>
+        <file>assets/pause.png</file>
+        <file>assets/play.png</file>
+        <file>assets/prev.png</file>
+        <file>assets/prev_next.png</file>
+        <file>qtquickcontrols2.conf</file>
+        <file>main.qml</file>
+        <file>Header.qml</file>
+        <file>DrawerContainer.qml</file>
+        <file>MenuList.qml</file>
+        <file>MessageBar.qml</file>
+        <file>assets/send.svg</file>
+        <file>Chat.qml</file>
+        <file>MessageModel.qml</file>
+        <file>Triangle.qml</file>
+    </qresource>
+</RCC>
