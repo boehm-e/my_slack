@@ -33,7 +33,6 @@ int			main(/* int argc , char *argv[] */) {
 
     if(connected)
       FD_SET(client.sock, &my_set);
-
     if(select(max_conn + 1, &my_set, NULL, NULL, NULL) == -1) {
       my_printf("ERROR : Select failed");
       return 1;
