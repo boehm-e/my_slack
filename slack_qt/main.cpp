@@ -5,8 +5,6 @@ int main(int argc, char *argv[])
 {
 
     qmlRegisterType<MyTcpSocket>("Socket", 1, 0, "Socket");
-    MyTcpSocket s;
-    s.doConnect();
     QGuiApplication app(argc, argv);
     QQmlApplicationEngine engine;
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));

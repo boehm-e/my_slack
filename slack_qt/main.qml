@@ -12,6 +12,10 @@ ApplicationWindow {
     visible: true
     color: "#e8e8e8"
 
+    Component.onCompleted: {
+        //        socket.sendMessage("testttt");
+    }
+
     Header {
         z: 2
         id: header
@@ -26,20 +30,18 @@ ApplicationWindow {
 
     Socket {
         id: socket
+        onNewMessage: {
+            console.log("New Message From Server : ", message)
+            chat.addItem("you", message)
+        }
     }
 
     Chat {
+        id: chat
         anchors.top: header.bottom
         anchors.bottom: message.top
         width: parent.width
         rotation: 180
-        MouseArea {
-            anchors.fill: parent
-            onClicked: {
-                console.log("OK")
-                socket.sendMessage("COUCOU")
-            }
-        }
     }
 
     MessageBar {

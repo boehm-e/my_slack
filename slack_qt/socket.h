@@ -15,13 +15,13 @@ public:
     void doConnect();
 
 signals:
-
+    void newMessage(QString message);
 public slots:
+    void sendMessage(QString message);
     void connected();
     void disconnected();
     void bytesWritten(qint64 bytes);
     void readyRead();
-    void sendMessage(QString message);
 
 private:
     QTcpSocket *socket;

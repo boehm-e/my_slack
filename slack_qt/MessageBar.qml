@@ -10,6 +10,13 @@ Rectangle {
         height: parent.height + 10
         placeholderText: "Message"
         font.family: "Helvetica"
+        onAccepted: {
+            if (this.text !== "") {
+                socket.sendMessage(this.text)
+                chat.addItem("me", this.text)
+                this.text = ""
+            }
+        }
     }
 
     Image {
