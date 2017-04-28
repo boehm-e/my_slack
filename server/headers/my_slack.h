@@ -17,34 +17,35 @@
 
 typedef struct	s_client {
   int		sock;
-  char		name[BUFFER_SIZE];
+  char 	*name;
+	int		message_count;
 } t_client;
 
 
 
-int		init(int *client_socket,
+int		init(t_client *client_socket,
 		     struct sockaddr_in *_address,
 		     int *_addrlen);
 
 void		reinit_socket(fd_set *my_set,
 			      int master_socket,
-			      int *client_socket,
+			      t_client *client_socket,
 			      int *sd,
 			      int *max_sd);
 
 void		handle_incoming_connexion(int master_socket,
 					  int new_socket,
-					  int *client_socket,
+					  t_client *client_socket,
                                           char *buffer,
 					  struct sockaddr_in address,
 					  socklen_t addrlen);
 
 void		handle_socket_set_IO(fd_set *my_set,
-				     int *client_socket,
+				     t_client *client_socket,
                                      char *buffer,
 				     int *sd);
 
-void            broadcast_message(int *client_socket,
+void            broadcast_message(t_client *client_socket,
                                   char *buffer);
 
 

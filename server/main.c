@@ -6,15 +6,15 @@
 #include "./headers/libmy.h"
 
 int			main(/* int argc , char *argv[] */) {
-  int			addrlen;
-  int			master_socket;
-  int			new_socket;
-  int			client_socket[30];
-  int			activity;
-  int			sd;
-  int			max_sd;
-  struct sockaddr_in	address;
-  fd_set	        my_set;
+  int			  addrlen;
+  int			  master_socket;
+  int			  new_socket;
+  t_client  client_socket[30];
+  int			  activity;
+  int			  sd;
+  int			  max_sd;
+  struct    sockaddr_in	address;
+  fd_set	  my_set;
   char			buffer[BUFFER_SIZE];
 
   new_socket = 0;
@@ -25,10 +25,10 @@ int			main(/* int argc , char *argv[] */) {
     activity = select( max_sd + 1 , &my_set , NULL , NULL , NULL);
 
     if (activity < 0)
-      my_printf("select error\n");
+    my_printf("select error\n");
 
     if (FD_ISSET(master_socket, &my_set))
-      handle_incoming_connexion(master_socket, new_socket, client_socket, buffer, address, addrlen);
+    handle_incoming_connexion(master_socket, new_socket, client_socket, buffer, address, addrlen);
 
     handle_socket_set_IO(&my_set, client_socket, buffer, &sd);
   }
@@ -37,9 +37,9 @@ int			main(/* int argc , char *argv[] */) {
 }
 
 
-int			init(int *client_socket, struct sockaddr_in *_address, int *_addrlen) {
+int			init(t_client *client_socket, struct sockaddr_in *_address, int *_addrlen) {
   int			master_socket;
-  struct sockaddr_in	address;
+  struct  sockaddr_in	address;
   int			max_clients;
   int			i;
   int                   enable;
@@ -49,8 +49,10 @@ int			init(int *client_socket, struct sockaddr_in *_address, int *_addrlen) {
   max_clients = 30;
   address = *_address;
 
-  for (i = 0; i < max_clients; i++)
-    client_socket[i] = 0;
+  for (i = 0; i < max_clients; i++) {
+    client_socket[i].sock = 0;
+    client_socket[i].message_count = 0;
+  }
 
   if( (master_socket = socket(AF_INET , SOCK_STREAM , 0)) == 0) {
     my_printf("ERROR during 'socket' !\n failed");
@@ -85,7 +87,7 @@ int			init(int *client_socket, struct sockaddr_in *_address, int *_addrlen) {
 }
 
 
-void			reinit_socket(fd_set *my_set, int master_socket, int *client_socket, int *sd, int *max_sd) {
+void			reinit_socket(fd_set *my_set, int master_socket, t_client *client_socket, int *sd, int *max_sd) {
   int			i;
   int			max_clients;
 
@@ -95,18 +97,18 @@ void			reinit_socket(fd_set *my_set, int master_socket, int *client_socket, int 
   *max_sd = master_socket;
 
   for (i = 0 ; i < max_clients ; i++) {
-    *sd = client_socket[i];
+    *sd = client_socket[i].sock;
 
     if (*sd > 0)
-      FD_SET(*sd , my_set);
+    FD_SET(*sd , my_set);
 
     if (*sd > *max_sd)
-      *max_sd = *sd;
+    *max_sd = *sd;
   }
 
 }
 
-void			handle_incoming_connexion(int master_socket, int new_socket, int *client_socket, char *buffer, struct sockaddr_in address, socklen_t addrlen) {
+void			handle_incoming_connexion(int master_socket, int new_socket, t_client *client_socket, char *buffer, struct sockaddr_in address, socklen_t addrlen) {
   int			i;
   int			max_clients;
 
@@ -119,13 +121,14 @@ void			handle_incoming_connexion(int master_socket, int new_socket, int *client_
   my_printf("New connection , socket fd is %d , ip is : %s , port : %d \n" , new_socket , inet_ntoa(address.sin_addr) , ntohs(address.sin_port));
 
   if( (int) send(new_socket, buffer, strlen(buffer), 0) != (int) strlen(buffer) )
-    my_printf("ERROR during 'send' !\n");
+  my_printf("ERROR during 'send' !\n");
+  send(new_socket , "Quel est ton nom?" ,  17, 0 );
 
   puts("Welcome message sent successfully");
 
   for (i = 0; i < max_clients; i++) {
-    if( client_socket[i] == 0 ) {
-      client_socket[i] = new_socket;
+    if( client_socket[i].sock == 0 ) {
+      client_socket[i].sock = new_socket;
       my_printf("Adding to list of sockets as %d\n" , i);
 
       break;
@@ -133,36 +136,46 @@ void			handle_incoming_connexion(int master_socket, int new_socket, int *client_
   }
 }
 
+void parse_message(char *message) {
+  my_printf("parsing : %s", message);
+}
 
-void			handle_socket_set_IO(fd_set *my_set, int *client_socket, char *buffer, int *sd) {
+void			handle_socket_set_IO(fd_set *my_set, t_client *client_socket, char *buffer, int *sd) {
   int			i;
   int			max_clients;
   int			valread;
 
   max_clients = 30;
   for (i = 0; i < max_clients; i++) {
-    *sd = client_socket[i];
+    *sd = client_socket[i].sock;
 
     if (FD_ISSET( *sd , my_set)) {
       /* Check if it was for closing , and also read the incoming message */
       if ((valread = read( *sd , buffer, 1024)) == 0) {
-	my_printf("Client %i disconnected !\n", *sd);
+        my_printf("Client %i disconnected !\n", *sd);
 
-	close(*sd);
-	client_socket[i] = 0;
+        close(*sd);
+        client_socket[i].sock = 0;
       } else if (strlen(buffer) == 0) {
-	my_printf("-------------------------\n");
+        my_printf("-------------------------\n");
       } else {
-	buffer[valread] = '\0';
-	my_printf("MESSAGE RECIEVED : %s\n", buffer);
+        buffer[valread] = '\0';
+        my_printf("MESSAGE RECIEVED[%i] (%s): %s\n", client_socket[i].message_count ,client_socket[i].name, buffer);
+        if (client_socket[i].message_count == 0) {
+          client_socket[i].name = buffer;
+        }
+        else if (client_socket[i].message_count == 1) {
+          send(client_socket[i].sock , "bonjour" , 6 , 0 );
+        }
       }
       broadcast_message(client_socket, buffer);
+      client_socket[i].message_count++;
       memset(buffer, 0, my_strlen(buffer));
     }
   }
 }
 
-void                    broadcast_message(int *client_socket, char *buffer) {
+void                    broadcast_message(t_client *client_socket, char *buffer) {
   int			i;
   int			sd;
   int			max_clients;
@@ -170,7 +183,7 @@ void                    broadcast_message(int *client_socket, char *buffer) {
 
   max_clients = 30;
   for (i = 0; i < max_clients; i++) {
-    sd = client_socket[i];
+    sd = client_socket[i].sock;
     if (sd != 0) {
       my_printf("MESSAGE SENT TO client %i: %s\n", sd, buffer);
       if ( (int)(ret_send = send(sd , buffer , strlen(buffer) , 0 )) != (int) strlen(buffer)) {
