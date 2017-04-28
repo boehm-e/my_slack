@@ -6,6 +6,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/socket.h>
+#include <sys/select.h>
 #include <arpa/inet.h>
 
 #define UNUSED(x) (void)(x)
@@ -27,5 +28,7 @@ typedef struct s_sockaddr {
     unsigned short    sa_family;
     char              sa_data[14];
 } t_sockaddr;
+
+int             init_socket();
 
 #endif                   /* !_MY_SLACK_ */

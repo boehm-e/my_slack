@@ -9,6 +9,9 @@
 #include <sys/select.h>
 #include <arpa/inet.h>
 
+#define TRUE   1
+#define FALSE  0
+#define PORT 8080
 #define UNUSED(x) (void)(x)
 #define BUFFER_SIZE 1024
 
@@ -18,9 +21,31 @@ typedef struct	s_client {
 } t_client;
 
 
-int	create_socket();
-int	recieve_msg(int _socket, char *msg);
-int	send_msg(int _socket, char *msg);
-void	remove_client(t_client *client);
+
+int		init(int *client_socket,
+		     struct sockaddr_in *_address,
+		     int *_addrlen);
+
+void		reinit_socket(fd_set *my_set,
+			      int master_socket,
+			      int *client_socket,
+			      int *sd,
+			      int *max_sd);
+
+void		handle_incoming_connexion(int master_socket,
+					  int new_socket,
+					  int *client_socket,
+                                          char *buffer,
+					  struct sockaddr_in address,
+					  socklen_t addrlen);
+
+void		handle_socket_set_IO(fd_set *my_set,
+				     int *client_socket,
+                                     char *buffer,
+				     int *sd);
+
+void            broadcast_message(int *client_socket,
+                                  char *buffer);
+
 
 #endif                   /* !_MY_SLACK_ */
