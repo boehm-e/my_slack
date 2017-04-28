@@ -32,6 +32,7 @@ int                     main(/* int argc, char **argv */) {
         my_printf("ERROR [read]");
         return 1;
       }
+      my_printf("\033[1A");
       if (send(socket_desc, buf2, BUFFER_SIZE, 0) == -1){
         my_printf("ERROR [send]");
         return 1;
@@ -42,7 +43,7 @@ int                     main(/* int argc, char **argv */) {
         my_printf("Erreur lors de la reception");
         return 1;
       }
-      my_printf("BUFFER FROM SERVER: %s\n ", buf);
+      my_printf("%s", buf);
     }
   }
 }

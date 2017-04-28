@@ -5,6 +5,9 @@
 #include "./headers/my_slack.h"
 #include "./headers/libmy.h"
 
+#include <stdlib.h>
+#include <stdarg.h>
+
 int			main(/* int argc , char *argv[] */) {
   int			addrlen;
   int			master_socket;
@@ -122,9 +125,9 @@ void			handle_incoming_connexion(int master_socket, int new_socket, t_client *cl
 
   if( (int) send(new_socket, buffer, strlen(buffer), 0) != (int) strlen(buffer) )
   my_printf("ERROR during 'send' !\n");
-  send(new_socket , "Quel est ton nom?" ,  17, 0 );
+  send(new_socket , "Quel est ton nom ?\n> " , 21, 0 );
 
-  puts("Welcome message sent successfully");
+  /* puts("Welcome message sent successfully"); */
 
   for (i = 0; i < max_clients; i++) {
     if( client_socket[i].sock == 0 ) {
@@ -145,6 +148,8 @@ void			handle_socket_set_IO(fd_set *my_set, t_client *client_socket, char *buffe
   int			max_clients;
   int			valread;
   int			buflen;
+  char			*sender;
+  int			reciever;
 
   max_clients = 30;
   for (i = 0; i < max_clients; i++) {
@@ -169,17 +174,23 @@ void			handle_socket_set_IO(fd_set *my_set, t_client *client_socket, char *buffe
 	  client_socket[i].name[buflen - 1] = '\0';
         }
         else if (client_socket[i].message_count == 1) {
-          send(client_socket[i].sock , "bonjour" , 6 , 0 );
+          /* send(client_socket[i].sock , "bonjour" , 6 , 0 ); */
         }
       }
-      broadcast_message(client_socket, buffer);
+      sender = malloc(sizeof(char) * BUFFER_SIZE);
+      my_strcpy(sender, client_socket[i].name);
       client_socket[i].message_count++;
+      if (buffer[0] == '@') { /*message perso*/
+	reciever = get_reciever(buffer);
+	send_message(sender, reciever, buffer);
+      } else
+	broadcast_message(sender, client_socket, buffer);
       memset(buffer, 0, my_strlen(buffer));
     }
   }
 }
 
-void                    broadcast_message(t_client *client_socket, char *buffer) {
+void                    broadcast_message( char *sender, t_client *client_socket, char *buffer) {
   int			i;
   int			sd;
   int			max_clients;
@@ -188,11 +199,44 @@ void                    broadcast_message(t_client *client_socket, char *buffer)
   max_clients = 30;
   for (i = 0; i < max_clients; i++) {
     sd = client_socket[i].sock;
-    if (sd != 0) {
+    if (sd != 0 && client_socket[i].message_count > 1) {
       my_printf("MESSAGE SENT TO client %i: %s\n", sd, buffer);
-      if ( (int)(ret_send = send(sd , buffer , strlen(buffer) , 0 )) != (int) strlen(buffer)) {
+
+
+      char *str =  (my_strcmp(sender, client_socket[i].name) != 0 )
+	? strconcat(6, BLU, "[", sender, "] \t: ", NRM, buffer)
+	: strconcat(6, WHT, "[", "YOU", "] \t: ", NRM, buffer);
+
+      my_printf("STR : %s\n", str);
+      if ( (int)(ret_send = send(sd , str , strlen(str) , 0 )) != (int) strlen(str)) {
         perror("error send()");
       }
     }
   }
+}
+
+
+char			*strconcat(int num_args, ...) {
+  int			strsize;
+  va_list	        ap;
+  int			i;
+  char			*res;
+
+  strsize = 0;
+  va_start(ap, num_args);
+  for (i = 0; i < num_args; i++)
+    strsize += strlen(va_arg(ap, char*));
+
+  res = malloc(strsize+1);
+  strsize = 0;
+  va_start(ap, num_args);
+  for (i = 0; i < num_args; i++) {
+    char *s = va_arg(ap, char*);
+    strcpy(res+strsize, s);
+    strsize += strlen(s);
+  }
+  va_end(ap);
+  res[strsize] = '\0';
+
+  return res;
 }
