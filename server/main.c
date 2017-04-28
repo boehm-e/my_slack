@@ -6,15 +6,15 @@
 #include "./headers/libmy.h"
 
 int			main(/* int argc , char *argv[] */) {
-  int			  addrlen;
-  int			  master_socket;
-  int			  new_socket;
-  t_client  client_socket[30];
-  int			  activity;
-  int			  sd;
-  int			  max_sd;
-  struct    sockaddr_in	address;
-  fd_set	  my_set;
+  int			addrlen;
+  int			master_socket;
+  int			new_socket;
+  t_client		client_socket[30];
+  int			activity;
+  int			sd;
+  int			max_sd;
+  struct sockaddr_in	address;
+  fd_set		my_set;
   char			buffer[BUFFER_SIZE];
 
   new_socket = 0;
@@ -144,6 +144,7 @@ void			handle_socket_set_IO(fd_set *my_set, t_client *client_socket, char *buffe
   int			i;
   int			max_clients;
   int			valread;
+  int			buflen;
 
   max_clients = 30;
   for (i = 0; i < max_clients; i++) {
@@ -162,7 +163,10 @@ void			handle_socket_set_IO(fd_set *my_set, t_client *client_socket, char *buffe
         buffer[valread] = '\0';
         my_printf("MESSAGE RECIEVED[%i] (%s): %s\n", client_socket[i].message_count ,client_socket[i].name, buffer);
         if (client_socket[i].message_count == 0) {
-          client_socket[i].name = buffer;
+	  buflen = my_strlen(buffer);
+          client_socket[i].name = malloc(sizeof(char) * BUFFER_SIZE);
+	  my_strcpy(client_socket[i].name, buffer);
+	  client_socket[i].name[buflen - 1] = '\0';
         }
         else if (client_socket[i].message_count == 1) {
           send(client_socket[i].sock , "bonjour" , 6 , 0 );

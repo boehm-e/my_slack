@@ -17,8 +17,10 @@
 
 typedef struct	s_client {
   int		sock;
-  char 	*name;
-	int		message_count;
+  char		*name;
+  int		message_count;
+  char		*private_key;
+  char		*public_key;
 } t_client;
 
 
